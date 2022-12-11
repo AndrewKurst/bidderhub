@@ -1,0 +1,83 @@
+openapi: 3.0.3
+info:
+  title: Bidder Hub
+  version: latest
+paths:
+  /{id}:
+    get:
+      tags:
+        - Bidder Hub
+      operationId: getWinnerBid
+      parameters:
+        - $ref: "#/components/parameters/Id"
+        - $ref: '#/components/parameters/Attributes'
+      responses:
+        200:
+          description: Ok
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: c:2500
+components:
+
+  parameters:
+
+    Id:
+      in: path
+      name: id
+      required: true
+      example: 2
+      schema:
+        type: string
+
+    Attributes:
+      in: query
+      name: attributes
+      schema:
+        $ref: "#/components/schemas/Attributes"
+
+  schemas:
+
+    Attributes:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        c: 5
+        b: 2
+
+    ErrorsResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Error"
+      required:
+        - errors
+
+    Error:
+      type: object
+      properties:
+        property:
+          type: string
+        code:
+          $ref: "#/components/schemas/ErrorCode"
+        description:
+          type: string
+        traceId:
+          type: string
+        stackTrace:
+          type: string
+      required:
+        - code
+        - description
+
+    ErrorCode:
+      type: string
+      enum:
+        - REQUIRED
+        - NOT_FOUND
+        - INVALID_FORMAT
+        - SERVER_ERROR

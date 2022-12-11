@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application.name: bidderhub
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    url: /doc/openapi.yaml

@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: Bidder
+  version: latest
+paths:
+  /:
+    post:
+      tags:
+        - Bidder
+      operationId: getBid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BidRequest"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BidResponse"
+components:
+  schemas:
+
+    BidRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        attributes:
+          additionalProperties:
+            type: string
+          example: {
+            "a": "5",
+            "b": "2"
+          }
+      required:
+        - id
+        - attributes
+
+    BidResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 1
+        bid:
+          type: number
+          example: 500
+        content:
+          type: string
+          example: c:$price$
+      required:
+        - id
+        - bid
+        - content

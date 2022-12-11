@@ -1,0 +1,48 @@
+plugins {
+    id "java"
+    id "org.openapi.generator" version "6.2.0"
+}
+
+group = "biderclient"
+version = "0.1"
+sourceCompatibility = "17"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["build/generated/src/main/java"]
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'io.github.openfeign:feign-jackson:12.1'
+    implementation 'io.github.openfeign:feign-slf4j:12.1'
+    implementation 'io.github.openfeign:feign-okhttp:12.1'
+    implementation 'io.github.openfeign.form:feign-form:3.8.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation 'com.github.scribejava:scribejava-core:8.3.3'
+    implementation 'io.swagger:swagger-annotations:1.6.9'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+
+openApiGenerate {
+    generatorName = "java"
+    inputSpec = "$rootDir/bidderclient/openapi.yaml"
+    outputDir = "$buildDir/generated"
+    apiPackage = "bidder.openapi.client"
+    modelPackage = "bidder.openapi.model"
+    additionalProperties = ["interfaceOnly": "true"]
+    configOptions = ["useTags"          : "true",
+                     "openApiNullable"  : "false",
+                     "library"          : "feign",
+                     "dateLibrary"      : "java8",
+                     "useBeanValidation": "false"]
+}
+
+compileJava.dependsOn "openApiGenerate"
