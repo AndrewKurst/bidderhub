@@ -1,13 +1,11 @@
 package bidderhub.conf;
 
-import static bidderhub.validator.Validator.run;
 import static feign.Retryer.NEVER_RETRY;
 
 import bidder.openapi.ApiClient;
 import bidder.openapi.client.BidderApi;
 import bidderhub.svc.BidderProvider;
 import bidderhub.util.BidderErrorDecoder;
-import bidderhub.validator.ConnectedBiddersValidator;
 import feign.Request.Options;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,14 +20,12 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @Slf4j
 public class Beans {
-  private final ConnectedBiddersValidator connectedBiddersValidator;
+
   private final BidderErrorDecoder bidderErrorDecoder;
 
   @Bean
   public List<BidderProvider> bidderProviders(@Value("${bidders}") String bidderUrlsCsv) {
-    run(errors -> connectedBiddersValidator.validate(bidderUrlsCsv, errors));
     final var bidderUrl = Stream.of(bidderUrlsCsv.split(",")).map(String::trim).toList();
-    run(errors -> connectedBiddersValidator.validate(bidderUrl, errors));
     return bidderUrl.stream()
         .map(
             it -> {
@@ -40,6 +36,11 @@ public class Beans {
                       apiClient
                           .getFeignBuilder()
                           .retryer(NEVER_RETRY)
+                          // TODO:
+                          //  Such configuration is tolerant enough for slow
+                          //  communication with bidders.
+                          //  For Live environment it's better to have the
+                          //  possibility to config such parameters through environment variables
                           .options(new Options(10, TimeUnit.SECONDS, 60, TimeUnit.SECONDS, false))
                           .errorDecoder(bidderErrorDecoder))
                   .buildClient(BidderApi.class);

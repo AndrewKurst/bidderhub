@@ -1,36 +1,9 @@
 version: "3"
 
 services:
-  bidder1:
-    image: yieldlab/recruiting-test-bidder
-    ports:
-      - 8081:8081
-    environment:
-      server.port: 8081
-      biddingTrigger: a
-      initial: 150
-
-  bidder2:
-    image: yieldlab/recruiting-test-bidder
-    ports:
-      - 8082:8082
-    environment:
-      server.port: 8082
-      biddingTrigger: b
-      initial: 250
-
-  bidder3:
-    image: yieldlab/recruiting-test-bidder
-    ports:
-      - 8083:8083
-    environment:
-      server.port: 8083
-      biddingTrigger: c
-      initial: 500
-
   bidderhub:
     build: .
     ports:
       - 8080:8080
     environment:
-      bidders: http://bidder1:8081, http://bidder2:8082, http://bidder3:8083
+      bidders: http://host.docker.internal:8081, http://host.docker.internal:8082, http://host.docker.internal:8083

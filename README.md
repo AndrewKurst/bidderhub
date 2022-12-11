@@ -1,13 +1,11 @@
-Instructions how to build and run the project
+Instructions how to build and run BidderHub
 ==============
-Requirements
-- Java 17
-
-Start 3 instances of bidders:
+### Option 1
+Start 3 instances of Bidders:
 ``` sh
 ./test-setup.sh
 ```
-Start bidderhub
+Start BidderHub with gradle
 ```sh
 bidders=http://localhost:8081,http://localhost:8082,http://localhost:8083 ./gradlew clean app:bootRun
 ```
@@ -15,7 +13,19 @@ Run tests
 ```sh
 ./run-test.sh
 ```
-
+### Option 2
+Start 3 instances of Bidders:
+``` sh
+./test-setup.sh
+```
+Start docker compose. It will create a docker image, and it will start BidderHub and 3 instances of Bidders:
+```sh
+docker compose up
+```
+Run tests
+```sh
+./run-test.sh
+```
 Bidding system
 ==============
 
